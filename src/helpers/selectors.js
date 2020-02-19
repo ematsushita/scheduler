@@ -25,3 +25,23 @@ export function getAppointmentsForDay(state, day) {
 
 }
 
+export function getInterview(state, interview) {
+  
+  if (!interview) {
+    return null;
+  }
+  const results = {}
+
+  results["student"] = interview.student;
+  
+  const interviewerKeys = Object.keys(state.interviewers)
+
+  for (let key of interviewerKeys) {
+    if (Number(key) === interview.interviewer) {
+      results["interviewer"] = state.interviewers[key]
+      
+    } 
+  }
+
+  return results;
+};
