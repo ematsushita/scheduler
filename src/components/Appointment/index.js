@@ -24,15 +24,24 @@ export default function Appointment(props) {
   const onCancel = function() {
     back();
   }
+
+  function save(name, interviewer) {
+    const interview = {
+      student: name,
+      interviewer
+    };
   
-  console.log("PROPS: ", props.interview)
+   props.bookInterview(props.id, interview).then(response => transition(SHOW))
+  }
+  
+
   return (
     <article className="appointment">
       <Header 
       time={props.time}
       />
      {mode === EMPTY && <Empty onAdd={onAdd} />}
-     {mode === CREATE && <Form interviewers={props.interviewers} onCancel={onCancel}/>}
+     {mode === CREATE && <Form interviewers={props.interviewers} onCancel={onCancel} onSave={save}/>}
      {mode === SHOW && (
     <Show
     student={props.interview.student}
