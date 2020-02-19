@@ -25,7 +25,7 @@ export default function Appointment(props) {
     back();
   }
   
-
+  console.log("PROPS: ", props.interview)
   return (
     <article className="appointment">
       <Header 
