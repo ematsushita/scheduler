@@ -61,6 +61,9 @@ export default function Appointment(props) {
     transition(EDIT)
   }
   
+  const onClose = () => {
+    transition(SHOW)
+  }
 
   return (
     <article className="appointment">
@@ -69,7 +72,7 @@ export default function Appointment(props) {
       />
      {mode === EMPTY && <Empty onAdd={onAdd} />}
      {mode === CREATE && <Form interviewers={props.interviewers} onCancel={onCancel} onSave={save}/>}
-     {mode === ERROR_SAVE && <Error message="There was an error saving."/> }
+     {mode === ERROR_SAVE && <Error message="There was an error saving." onClose={onClose}/> }
      {mode === SAVING && <Status message="Saving" />}
      {mode === EDIT && <Form student={props.interview.student} interviewer={props.interview.interviewer.id} interviewers={props.interviewers} onCancel={onCancel} onSave={save} />}
      {mode === SHOW && (
@@ -82,7 +85,7 @@ export default function Appointment(props) {
       )}
     {mode === CONFIRM && <Confirm message="Are you sure you want to delete" onCancel={onCancel} onConfirm={onDelete}/>}
     {mode === DELETING && <Status message="Deleting" />}
-    {mode === ERROR_DELETE && <Error message="There was an error deleting." />}
+    {mode === ERROR_DELETE && <Error message="There was an error deleting." onClose={onClose}/> }
 
     </article>
   );
