@@ -40,9 +40,9 @@ export default function Appointment(props) {
       interviewer
     };
     transition(SAVING)
-   props.bookInterview(props.id, interview)
-   .then(response => transition(SHOW))
-   .catch(error => transition(ERROR_SAVE, true))
+    props.bookInterview(props.id, interview)
+    .then(response => transition(SHOW))
+    .catch(error => transition(ERROR_SAVE, true))
   }
 
   function onConfirm() {
