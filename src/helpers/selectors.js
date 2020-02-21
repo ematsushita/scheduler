@@ -1,5 +1,6 @@
 export function getAppointmentsForDay(state, day) {
   //if days data is empty, return []
+  
   if (state.days.length === 0) {
     return [];
   }

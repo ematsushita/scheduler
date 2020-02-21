@@ -23,7 +23,6 @@ switch (action.type) {
     return {...state, days, appointments, interviewers}
     
   case SET_INTERVIEW: {
-
     const {appointments, interview, days} = action
     return interview ? {...state, appointments, days} : {...state, days}
   }
@@ -41,53 +40,54 @@ export default function useApplicationData(){
 
   const [state, dispatch] = useReducer(reducer, initialState)
 
-  function countSpots(appt_id, days, appointments) {
+  function countSpots(id, flag) {
 
-    let spots = 0;
-  
-    const matchedDay = days.filter(weekday => weekday.appointments.includes(appt_id))[0]
-    const dayAppts = matchedDay.appointments
-  
-    for (let app of dayAppts) {
-      if (appointments[app].interview === null) {
-        spots += 1;
-      }
+    const matchedDay = state.days.filter(weekday => weekday.appointments.includes(id))[0]
+    const dayId = matchedDay.id;
+
+    let newSpots = state.days[dayId - 1].spots;
+
+    if (flag && state.appointments[id].interview === null) {
+      newSpots--;
+    } else if (!flag) {
+      newSpots++
     }
-  
-    matchedDay.spots = spots;
-    const day_id = matchedDay.id;
-    const newerBetterDays = days
 
-    newerBetterDays[day_id - 1] = matchedDay
-
-    return newerBetterDays;
+    return state.days.map(day => {
+      if (day.id !== dayId) {
+        return day
+      } return {
+        ...day, 
+        spots: newSpots
+      }
+    })
   }
   
 
 
-  function bookInterview(appt_id, interview) {
-    console.log('wat2');
+  function bookInterview(id, interview) {
 
     const appointment = {
-      ...state.appointments[appt_id],
-      interview: interview ? { ...interview } : null
+      ...state.appointments[id],
+      interview: { ...interview }
     };
 
     const appointments = {
       ...state.appointments,
-      [appt_id]: appointment
+      [id]: appointment
     };
 
-    const days = countSpots(appt_id, state.days, appointments)
-    console.log("days spots, yo", days.map(day => `${day.name} ${day.spots}`))
+    const days = countSpots(id, true)
+
     
-    return axios.put(`/api/appointments/${appt_id}`, appointment)
-    .then(response => dispatch({ type: SET_INTERVIEW, appt_id, interview, appointments, days }))
+    return axios.put(`/api/appointments/${id}`, appointment)
+    .then(() => dispatch({ type: SET_INTERVIEW, id, interview, appointments, days }))
   }
 
   function cancelInterview(id) {
+    const days = countSpots(id, false)
     return axios.delete(`/api/appointments/${id}`)
-    .then(response => dispatch({ type: SET_INTERVIEW, id, interview: null }))
+    .then(() => dispatch({ type: SET_INTERVIEW, id, interview: null, days}))
   }
 
 
@@ -101,7 +101,6 @@ export default function useApplicationData(){
       let days = all[0].data;
       let appointments = all[1].data;
       let interviewers = all[2].data;
-      console.log("boogada", days)
       dispatch({ type: SET_APPLICATION_DATA, days, appointments, interviewers })
     })
     .catch(function(error) {
