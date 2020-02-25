@@ -1,10 +1,16 @@
-import {useState, useEffect, useReducer} from "react";
+import {useEffect, useReducer} from "react";
 import axios from 'axios';
-import DayList from "components/DayList";
+import {
+  reducer,
+  SET_DAY,
+  SET_APPLICATION_DATA,
+  SET_INTERVIEW
+} from "reducers/application";
 
-const SET_DAY = "SET_DAY";
-const SET_APPLICATION_DATA = "SET_APPLICATION_DATA";
-const SET_INTERVIEW = "SET_INTERVIEW";
+
+// const SET_DAY = "SET_DAY";
+// const SET_APPLICATION_DATA = "SET_APPLICATION_DATA";
+// const SET_INTERVIEW = "SET_INTERVIEW";
 
 const initialState = {
   day: "Monday", 
@@ -13,25 +19,25 @@ const initialState = {
   interviewers: {}
 }
 
-function reducer(state, action) {
-switch (action.type) {
-  case SET_DAY:
-    const {day} = action
-    return { ...state, day  };
-  case SET_APPLICATION_DATA:
-    const {days, appointments, interviewers} = action 
-    return {...state, days, appointments, interviewers}
+// function reducer(state, action) {
+// switch (action.type) {
+//   case SET_DAY:
+//     const {day} = action
+//     return { ...state, day  };
+//   case SET_APPLICATION_DATA:
+//     const {days, appointments, interviewers} = action 
+//     return {...state, days, appointments, interviewers}
     
-  case SET_INTERVIEW: {
-    const {appointments, interview, days} = action
-    return interview ? {...state, appointments, days} : {...state, days}
-  }
-  default:
-    throw new Error(
-      `Tried to reduce with unsupported action type: ${action.type}`
-    );
-  }
-}
+//   case SET_INTERVIEW: {
+//     const {appointments, interview, days} = action
+//     return interview ? {...state, appointments, days} : {...state, days, appointments}
+//   }
+//   default:
+//     throw new Error(
+//       `Tried to reduce with unsupported action type: ${action.type}`
+//     );
+//   }
+// }
 
 
 
@@ -81,13 +87,22 @@ export default function useApplicationData(){
 
     
     return axios.put(`/api/appointments/${id}`, appointment)
-    .then(() => dispatch({ type: SET_INTERVIEW, id, interview, appointments, days }))
+    .then(() => dispatch({ type: SET_INTERVIEW, interview, appointments, days }))
   }
 
   function cancelInterview(id) {
+    const appointment = {
+      ...state.appointments[id],
+      interview: null
+    };
+
+    const appointments = {
+      ...state.appointments, 
+      [id]:appointment
+    }
     const days = countSpots(id, false)
     return axios.delete(`/api/appointments/${id}`)
-    .then(() => dispatch({ type: SET_INTERVIEW, id, interview: null, days}))
+    .then(() => dispatch({ type: SET_INTERVIEW, interview: null, days, appointments}))
   }
 
 
