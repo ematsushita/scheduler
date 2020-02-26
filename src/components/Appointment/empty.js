@@ -1,7 +1,7 @@
 import React from "react";
 
 export default function Empty(props) {
-
+//Shows empty (available) interview slot
   return (
     <main className="appointment__add">
     <img
@@ -12,7 +12,7 @@ export default function Empty(props) {
     />
     </main>
   );
-}
+};
 
 
 

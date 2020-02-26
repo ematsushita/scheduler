@@ -1,20 +1,11 @@
 export function getAppointmentsForDay(state, day) {
-  //if days data is empty, return []
-  
   if (state.days.length === 0) {
     return [];
   }
-
-  //filter days for day that matches days data
   const filteredDays = state.days.filter(weekday => weekday.name === day)
-
-
-  //if filter returns nothing, return []
   if (filteredDays.length === 0) {
     return [];
   }
-
-  //filter through appointment Keys to find ones that match appointment ids of given day
   const appointmentKeys = Object.keys(state.appointments);
   const results = [];
   for (let key of appointmentKeys) {
@@ -32,14 +23,12 @@ export function getInterviewersByDay(state, day) {
     return results;
   }
 
-  //filter days for day that matches days data
   const matchedDay = state.days.filter(weekday => weekday.name === day)
 
   if (matchedDay.length === 0) {
     return results;
   } 
 
-  //[1. 2]
   const interviewerKeys = Object.keys(state.interviewers)
 
   for (let key of interviewerKeys) {
@@ -49,7 +38,7 @@ export function getInterviewersByDay(state, day) {
   }
   return results;
 
-}
+};
 
 export function getInterview(state, interview) {
   

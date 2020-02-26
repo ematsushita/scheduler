@@ -8,10 +8,6 @@ import {
 } from "reducers/application";
 
 
-// const SET_DAY = "SET_DAY";
-// const SET_APPLICATION_DATA = "SET_APPLICATION_DATA";
-// const SET_INTERVIEW = "SET_INTERVIEW";
-
 const initialState = {
   day: "Monday", 
   days: [],
@@ -19,33 +15,14 @@ const initialState = {
   interviewers: {}
 }
 
-// function reducer(state, action) {
-// switch (action.type) {
-//   case SET_DAY:
-//     const {day} = action
-//     return { ...state, day  };
-//   case SET_APPLICATION_DATA:
-//     const {days, appointments, interviewers} = action 
-//     return {...state, days, appointments, interviewers}
-    
-//   case SET_INTERVIEW: {
-//     const {appointments, interview, days} = action
-//     return interview ? {...state, appointments, days} : {...state, days, appointments}
-//   }
-//   default:
-//     throw new Error(
-//       `Tried to reduce with unsupported action type: ${action.type}`
-//     );
-//   }
-// }
-
-
-
 
 export default function useApplicationData(){
 
   const [state, dispatch] = useReducer(reducer, initialState)
 
+
+  //Function to count empty available spots on a given day - receives 'true' or 'false' to determine
+  //whether to increase or decrease spots 
   function countSpots(id, flag) {
 
     const matchedDay = state.days.filter(weekday => weekday.appointments.includes(id))[0]
@@ -57,7 +34,7 @@ export default function useApplicationData(){
       newSpots--;
     } else if (!flag) {
       newSpots++
-    }
+    };
 
     return state.days.map(day => {
       if (day.id !== dayId) {
@@ -66,8 +43,8 @@ export default function useApplicationData(){
         ...day, 
         spots: newSpots
       }
-    })
-  }
+    });
+  };
   
 
 
@@ -82,15 +59,15 @@ export default function useApplicationData(){
       ...state.appointments,
       [id]: appointment
     };
-
-    const days = countSpots(id, true)
-
-    
+    //Count updated spots available
+    const days = countSpots(id, true);
+    //Create new appointment in database
     return axios.put(`/api/appointments/${id}`, appointment)
     .then(() => dispatch({ type: SET_INTERVIEW, interview, appointments, days }))
-  }
+  };
 
   function cancelInterview(id) {
+
     const appointment = {
       ...state.appointments[id],
       interview: null
@@ -99,11 +76,12 @@ export default function useApplicationData(){
     const appointments = {
       ...state.appointments, 
       [id]:appointment
-    }
-    const days = countSpots(id, false)
+    };
+    //Count updated spots available
+    const days = countSpots(id, false);
     return axios.delete(`/api/appointments/${id}`)
     .then(() => dispatch({ type: SET_INTERVIEW, interview: null, days, appointments}))
-  }
+  };
 
 
   const setDay = day => dispatch({type:SET_DAY, day});

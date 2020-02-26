@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import Button from "../Button"
-import InterviewerList from "../InterviewerList"
+import Button from "../Button";
+import InterviewerList from "../InterviewerList";
 
 
 export default function Form(props) {
@@ -18,11 +18,13 @@ export default function Form(props) {
     reset();
   }
 
+  //Ensures student name is not blank when user tries to book interview
   const validate = () => {
     if (name === "") {
       setError("Student name cannot be blank");
       return;
     }
+    //Clears error if user updates empty name field
     setError("");
     props.onSave(name || props.student, interviewer)
   }
@@ -51,5 +53,5 @@ export default function Form(props) {
     </section>
   </main>
   );
-}
+};
 

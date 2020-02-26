@@ -19,5 +19,5 @@ export function reducer(state, action) {
       throw new Error(
         `Tried to reduce with unsupported action type: ${action.type}`
       );
-    }
-  }
+    };
+  };
