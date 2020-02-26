@@ -150,7 +150,7 @@ describe("Application", () => {
     expect(getByText(appointment, "Deleting")).toBeInTheDocument();
 
     await waitForElement(() => axios.delete.mockRejectedValueOnce());
-    debug()
+    
     expect(getByText(appointment, "There was an error deleting.")).toBeInTheDocument();
   });
 });
