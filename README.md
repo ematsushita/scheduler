@@ -1,6 +1,9 @@
 # Interview Scheduler
 A simple, single-page application built using React. Users can switch between weekdays and book an interview in an empty appointment slot - the number of available spots will update dynamically. Interviews are booked by typing in a student name and clicking on an interviewer from a list of available interviewers. Users can then cancel and interview or edit details on an existing interview. 
 
+## Final Product
+![](docs/ElissaM.gif)
+
 ## Setup
 
 Install dependencies with `npm install`.
@@ -28,5 +31,3 @@ npm run cypress
 ```sh
 npm run storybook
 ```
-
-## Final Product
